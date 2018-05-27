@@ -13,6 +13,7 @@ ADD nginx.conf /etc/nginx/conf.d/
 
 # Configure Mailman
 RUN sed -i -e "s@^DEFAULT_URL_PATTERN.*@DEFAULT_URL_PATTERN = \'http://%s/\'@g" /etc/mailman/mm_cfg.py && \
+    echo "MTA = 'Postfix'" >> /etc/mailman/mm_cfg.py && \
     # Cache default dirs as template (must come after configuration)
     cp -a /etc/mailman /etc/mailman.cache && \
     cp -a /var/lib/mailman /var/lib/mailman.cache && \
