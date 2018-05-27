@@ -7,16 +7,17 @@ RUN apt-get update && \
 RUN rm -rf /var/lib/apt/lists/* && \
     # Configure Nginx
     sed -i -e 's@worker_processes 4@worker_processes 1@g' /etc/nginx/nginx.conf && \
-    rm -f /etc/nginx/sites-enabled/default && \
-    # Configure Mailman
-    sed -i -e "s@^DEFAULT_URL_PATTERN.*@DEFAULT_URL_PATTERN = \'http://%s/\'@g" /etc/mailman/mm_cfg.py && \
-    sed -i -e "s@^DEFAULT_SERVER_LANGUAGE.*@DEFAULT_SERVER_LANGUAGE = \'de\'@g" /etc/mailman/mm_cfg.py && \
+    rm -f /etc/nginx/sites-enabled/default
+
+ADD nginx.conf /etc/nginx/conf.d/
+
+# Configure Mailman
+RUN sed -i -e "s@^DEFAULT_URL_PATTERN.*@DEFAULT_URL_PATTERN = \'http://%s/\'@g" /etc/mailman/mm_cfg.py && \
     # Cache default dirs as template (must come after configuration)
     cp -a /etc/mailman /etc/mailman.cache && \
     cp -a /var/lib/mailman /var/lib/mailman.cache && \
     cp -a /var/spool/postfix /var/spool/postfix.cache
 
-ADD nginx.conf /etc/nginx/conf.d/
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 ADD *.sh /
 

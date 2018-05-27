@@ -9,6 +9,11 @@ set -e
 [ -z "$MAILMAN_EMAILHOST" ] && echo "Error: MAILMAN_EMAILHOST not set" && exit 128 || true
 [ -z "$MAILMAN_ADMINMAIL" ] && echo "Error: MAILMAN_ADMINMAIL not set" && exit 128 || true
 [ -z "$MAILMAN_ADMINPASS" ] && echo "Error: MAILMAN_ADMINPASS not set" && exit 128 || true
+# Default for Mailman language setting: 'en'
+[ -z "$MAILMAN_LANGCODE" ] && MAILMAN_LANGCODE="en"
+
+# set NGINX server_name to $MAILMAN_URLHOST
+sed -i -e "s@server_name.*@server_name $MAILMAN_URLHOST;@g" /etc/nginx/conf.d/nginx.conf
 
 # Copy default mailman etc from cache
 if [ ! "$(ls -A /etc/mailman)" ]; then
@@ -24,6 +29,12 @@ fi
 if [ ! "$(ls -A /var/spool/postfix)" ]; then
    cp -a /var/spool/postfix.cache/. /var/spool/postfix/
 fi
+
+# Insert EMAIL and URL domain names
+sed -i -e "s@^DEFAULT_EMAIL_HOST.*@DEFAULT_EMAIL_HOST = \'${MAILMAN_EMAILHOST}\'@g" /etc/mailman/mm_cfg.py && \
+sed -i -e "s@^DEFAULT_URL_HOST.*@DEFAULT_URL_HOST = \'${MAILMAN_URLHOST}\'@g" /etc/mailman/mm_cfg.py && \
+# Set language code
+sed -i -e "s@^DEFAULT_SERVER_LANGUAGE.*@DEFAULT_SERVER_LANGUAGE = \'${MAILMAN_LANGCODE}\'@g" /etc/mailman/mm_cfg.py && \
 
 # Fix permissions
 /usr/lib/mailman/bin/check_perms -f
