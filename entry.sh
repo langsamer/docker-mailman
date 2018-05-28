@@ -47,6 +47,7 @@ fi
 # Fix Postfix settings
 postconf -e mydestination=${MAILMAN_EMAILHOST}
 postconf -e myhostname=${HOSTNAME}
+postconf -e alias_maps=hash:/etc/postfix/aliases,hash:/etc/aliases
 
 # 20MB size limit
 postconf -e mailbox_size_limit=20971520
@@ -60,6 +61,8 @@ fi
 
 # Init Postfix Config
 /usr/lib/mailman/bin/genaliases -q >> /etc/aliases
+chown list:list /etc/aliases*
+chmod g+w /etc/aliases*
 newaliases
 
 exec $@
