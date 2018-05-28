@@ -60,9 +60,10 @@ if [ -n "$MAILMAN_SSL_CRT" ] && [ -n "$MAILMAN_SSL_KEY" ] && [ -n "$MAILMAN_SSL_
 fi
 
 # Init Postfix Config
-/usr/lib/mailman/bin/genaliases -q >> /etc/aliases
-chown list:list /etc/aliases*
-chmod g+w /etc/aliases*
+/usr/lib/mailman/bin/genaliases -q >> /var/lib/mailman/data/aliases
+chown list:list /var/lib/mailman/data/aliases*
+chmod g+w /var/lib/mailman/data/aliases*
+chmod o+r /var/lib/mailman/data/aliases*
 newaliases
 
 exec $@
