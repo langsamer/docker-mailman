@@ -15,24 +15,6 @@ set -e
 # set NGINX server_name to $MAILMAN_URLHOST
 sed -i -e "s@server_name.*@server_name $MAILMAN_URLHOST;@g" /etc/nginx/conf.d/nginx.conf
 
-# Copy default mailman etc from cache
-if [ ! "$(ls -A /etc/mailman)" ]; then
-   cp -a /etc/mailman.cache/. /etc/mailman/
-   rm -r /etc/mailman.cache
-fi
-
-# Copy default mailman data from cache
-if [ ! "$(ls -A /var/lib/mailman)" ]; then
-   cp -a /var/lib/mailman.cache/. /var/lib/mailman/
-   rm -r /var/lib/mailman.cache
-fi
-
-# Copy default spool from cache
-if [ ! "$(ls -A /var/spool/postfix)" ]; then
-   cp -a /var/spool/postfix.cache/. /var/spool/postfix/
-   rm -r /var/spool/postfix.cache
-fi
-
 # Insert EMAIL and URL domain names
 sed -i -e "s@^DEFAULT_EMAIL_HOST.*@DEFAULT_EMAIL_HOST = \'${MAILMAN_EMAILHOST}\'@g" /etc/mailman/mm_cfg.py && \
 sed -i -e "s@^DEFAULT_URL_HOST.*@DEFAULT_URL_HOST = \'${MAILMAN_URLHOST}\'@g" /etc/mailman/mm_cfg.py && \

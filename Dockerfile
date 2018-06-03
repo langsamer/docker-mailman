@@ -20,10 +20,14 @@ RUN sed -i -e "s@^DEFAULT_URL_PATTERN.*@DEFAULT_URL_PATTERN = \'http://%s/\'@g" 
     echo "MTA ='Postfix'" >> /etc/mailman/mm_cfg.py && \
     echo "add_language('de', 'Deutsch', 'utf-8', 'ltr')" >> etc/mailman/mm_cfg.py && \
     echo "add_language('en', 'English (US)', 'utf-8', 'ltr')" >> etc/mailman/mm_cfg.py && \
-    # Cache default dirs as template (must come after configuration)
-    cp -a /etc/mailman /etc/mailman.cache && \
-    cp -a /var/lib/mailman /var/lib/mailman.cache && \
-    cp -a /var/spool/postfix /var/spool/postfix.cache
+    echo "DEFAULT_ARCHIVE = Off" >> /etc/mailman/mm_cfg.py && \
+    echo "DEFAULT_ARCHIVE_PRIVATE = 1" >> /etc/mailman/mm_cfg.py && \
+    echo "DEFAULT_ARCHIVE_VOLUME_FREQUENCY = 2" >> /etc/mailman/mm_cfg.py && \
+    echo "ARCHIVE_TO_MBOX = 1" >> /etc/mailman/mm_cfg.py && \
+    echo "DEFAULT_ADMIN_MEMBER_CHUNKSIZE = 50" >> /etc/mailman/mm_cfg.py && \
+    echo "DEFAULT_MAX_MESSAGE_SIZE = 6000" >> /etc/mailman/mm_cfg.py && \
+    echo "OLD_STYLE_PREFIXING = No" >> /etc/mailman/mm_cfg.py && \
+    echo "done with mm_cfg.py!"
 
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 ADD *.sh /
