@@ -27,14 +27,13 @@ RUN sed -i -e "s@^DEFAULT_URL_PATTERN.*@DEFAULT_URL_PATTERN = \'http://%s/\'@g" 
     echo "DEFAULT_ADMIN_MEMBER_CHUNKSIZE = 50" >> /etc/mailman/mm_cfg.py && \
     echo "DEFAULT_MAX_MESSAGE_SIZE = 6000" >> /etc/mailman/mm_cfg.py && \
     echo "OLD_STYLE_PREFIXING = No" >> /etc/mailman/mm_cfg.py && \
+    echo "DEFAULT_SEND_REMINDERS = 1" >> /etc/mailman/mm_cfg.py && \
     echo "done with mm_cfg.py!"
 
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 ADD *.sh /
 
 EXPOSE 25 80
-
-VOLUME ["/etc/mailman", "/var/lib/mailman", "/var/log/mailman", "/var/spool/postfix"]
 
 ENTRYPOINT ["/entry.sh"]
 
