@@ -1,0 +1,17 @@
+version: '2'
+services:
+  mailman-de:
+    build: .
+    volumes:
+    - "/var/lib/mailman/etc:/etc/mailman"
+    - "/var/lib/mailman/data:/var/lib/mailman"
+    - "/var/lib/mailman/log:/var/log/mailman"
+    environment:
+      MAILMAN_URLHOST: mailman.lebenzraum-vaihingen.de
+      MAILMAN_EMAILHOST: lebenzraum-vaihingen.de
+      MAILMAN_ADMINMAIL: palomar@gmx.de
+      MAILMAN_ADMINPASS: bgb2018
+      MAILMAN_LANGCODE: de
+    ports:
+      - "25:25"
+      - "80:80"
