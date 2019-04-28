@@ -10,7 +10,9 @@ RUN rm -rf /var/lib/apt/lists/* && \
     sed -i -e 's@worker_processes 4@worker_processes 1@g' /etc/nginx/nginx.conf && \
     rm -f /etc/nginx/sites-enabled/default
 
-ADD nginx.conf /etc/nginx/conf.d/
+# install suitable NGINX configurations: www.* is for the main domain; mailman.* for the mailman subdomain
+ADD www.lebenzraum.conf /etc/nginx/sites-enabled/
+ADD mailman.lebenzraum.conf /etc/nginx/sites-enabled/
 
 # Required only if volume /etc/mailman not defined or not mapped; use host file system otherwise
 ADD templates/de/* /etc/mailman/de/
